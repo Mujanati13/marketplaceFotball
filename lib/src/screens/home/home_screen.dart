@@ -89,13 +89,19 @@ class HomeScreen extends ConsumerWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
-              childAspectRatio: 1.2,
+              childAspectRatio: 1.1,
               children: [
                 _buildQuickActionCard(
                   context,
                   'Browse Listings',
                   Icons.search,
                   () => context.go('/listings'),
+                ),
+                _buildQuickActionCard(
+                  context,
+                  'Events',
+                  Icons.calendar_today,
+                  () => context.go('/events'),
                 ),
                 _buildQuickActionCard(
                   context,
@@ -106,7 +112,7 @@ class HomeScreen extends ConsumerWidget {
                 _buildQuickActionCard(
                   context,
                   'Meetings',
-                  Icons.event,
+                  Icons.event_available,
                   () => context.go('/meetings'),
                 ),
                 _buildQuickActionCard(

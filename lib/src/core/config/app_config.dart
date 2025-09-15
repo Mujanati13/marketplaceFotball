@@ -6,9 +6,9 @@ class AppConfig {
   static const String baseUrl = 'https://footbalmarketplace.albech.me/api';
   static const String apiBaseUrl = 'https://footbalmarketplace.albech.me/api';
   static const String socketUrl = 'https://footbalmarketplace.albech.me';
-  // static const String baseUrl = 'http://192.168.126.1:3000/api';
-  // static const String apiBaseUrl = 'http://192.168.126.1:3000/api';
-  // static const String socketUrl = 'http://192.168.126.1:3000';
+  // static const String baseUrl = 'http://192.168.72.1:3000/api';
+  // static const String apiBaseUrl = 'http://192.168.72.1:3000/api';
+  // static const String socketUrl = 'http://192.168.72.1:3000';
   // Storage Keys
   static const String accessTokenKey = 'access_token';
   static const String refreshTokenKey = 'refresh_token';

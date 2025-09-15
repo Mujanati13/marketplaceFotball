@@ -70,6 +70,7 @@ class MainNavigationWrapper extends ConsumerWidget {
       return 2;
     if (location.startsWith('/profile')) return 3;
     if (location.startsWith('/admin')) return 4;
+    if (location.startsWith('/events')) return 0; // Events accessible from home
     return 0;
   }
 

@@ -23,6 +23,7 @@ import '../../screens/conversations/conversations_screen.dart';
 import '../../screens/conversations/conversation_detail_screen.dart';
 import '../../screens/admin/admin_dashboard_screen.dart';
 import '../../screens/requests/request_detail_screen.dart';
+import '../../screens/events/events_screen.dart';
 import '../../screens/placeholder_screens.dart' as placeholder;
 import '../../widgets/navigation/main_navigation_wrapper.dart';
 
@@ -49,6 +50,7 @@ class Routes {
   static const createMeeting = '/meetings/create';
   static const conversations = '/conversations';
   static const chat = '/chat/:id';
+  static const events = '/events';
   static const adminDashboard = '/admin';
 }
 
@@ -75,6 +77,7 @@ enum AppRoute {
   createMeeting(Routes.createMeeting),
   conversations(Routes.conversations),
   chat(Routes.chat),
+  events(Routes.events),
   adminDashboard(Routes.adminDashboard);
 
   const AppRoute(this.path);
@@ -230,6 +233,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               final id = state.pathParameters['id']!;
               return ConversationDetailScreen(conversationId: id);
             },
+          ),
+          GoRoute(
+            path: Routes.events,
+            name: 'events',
+            builder: (context, state) => const EventsScreen(),
           ),
           GoRoute(
             path: Routes.adminDashboard,

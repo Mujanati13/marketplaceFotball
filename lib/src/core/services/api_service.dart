@@ -8,6 +8,7 @@ import '../../models/request.dart';
 import '../../models/meeting.dart';
 import '../../models/conversation.dart';
 import '../../models/message.dart';
+import '../../models/event.dart';
 
 part 'api_service.g.dart';
 
@@ -203,6 +204,17 @@ abstract class ApiService {
 
   @PUT('/chat/messages/{id}/read')
   Future<void> markMessageAsRead(@Path('id') String messageId);
+
+  // Events endpoints
+  @GET('/events')
+  Future<EventsResponse> getEvents({
+    @Query('page') int page = 1,
+    @Query('limit') int limit = 20,
+    @Query('type') String? type,
+  });
+
+  @GET('/events/{id}')
+  Future<Event> getEvent(@Path('id') String id);
 
   // Admin endpoints
   @GET('/admin/stats')

@@ -334,12 +334,12 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen> {
     );
   }
 
-  void _createConversation(
+  Future<void> _createConversation(
     BuildContext context,
     String title,
     String type,
     List<Map<String, dynamic>> selectedUsers,
-  ) {
+  ) async {
     if (title.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a conversation title')),
@@ -379,8 +379,62 @@ class _ConversationsScreenState extends ConsumerState<ConversationsScreen> {
       type: type,
     );
 
-    ref.read(conversationsProvider.notifier).createConversation(request);
-    Navigator.pop(context);
+    try {
+      final result = await ref
+          .read(conversationsProvider.notifier)
+          .createConversation(request);
+
+      if (result != null) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Conversation created successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        // Check the provider state for specific error messages
+        final providerState = ref.read(conversationsProvider);
+        String errorMessage = 'Unable to create conversation';
+
+        if (providerState.error != null) {
+          if (providerState.error!.toLowerCase().contains(
+            'insufficient permissions',
+          )) {
+            errorMessage =
+                'You don\'t have permission to create this type of conversation. Please contact support if needed.';
+          } else {
+            errorMessage = providerState.error!;
+          }
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle any unexpected errors that weren't caught by the provider
+      String errorMessage = 'Failed to create conversation';
+
+      // Check if it's a permission error
+      if (e.toString().toLowerCase().contains('insufficient permissions') ||
+          e.toString().contains('403')) {
+        errorMessage =
+            'You don\'t have permission to create this type of conversation. Please contact support if needed.';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    }
   }
 
   void _showUserSelectionDialog(

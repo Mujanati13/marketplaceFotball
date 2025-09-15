@@ -152,13 +152,18 @@ class _LoggingInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    LoggerService.error(
-      '❌ API Error: ${err.response?.statusCode} ${err.requestOptions.path}',
-    );
-    LoggerService.error('Error Type: ${err.type}');
-    LoggerService.error('Error Message: ${err.message}');
-    LoggerService.error('Error Response: ${err.response?.data}');
-    LoggerService.error('Request Data: ${err.requestOptions.data}');
+    // Reduce logging for permission errors (403) to avoid crash-like appearance
+    if (err.response?.statusCode == 403) {
+      LoggerService.debug('Permission denied: ${err.requestOptions.path}');
+    } else {
+      LoggerService.error(
+        '❌ API Error: ${err.response?.statusCode} ${err.requestOptions.path}',
+      );
+      LoggerService.error('Error Type: ${err.type}');
+      LoggerService.error('Error Message: ${err.message}');
+      LoggerService.error('Error Response: ${err.response?.data}');
+      LoggerService.error('Request Data: ${err.requestOptions.data}');
+    }
     super.onError(err, handler);
   }
 }
@@ -167,7 +172,13 @@ class _ErrorInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     final apiError = _parseError(err);
-    LoggerService.error('API Error occurred', apiError);
+
+    // Reduce logging for permission errors to avoid crash-like appearance
+    if (err.response?.statusCode == 403) {
+      LoggerService.debug('Permission error handled gracefully');
+    } else {
+      LoggerService.error('API Error occurred', apiError);
+    }
 
     // Transform DioException to ApiException
     final exception = ApiException(

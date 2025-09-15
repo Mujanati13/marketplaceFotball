@@ -72,13 +72,26 @@ class ConversationsNotifier extends StateNotifier<ConversationsState> {
       // Add to current list
       state = state.copyWith(
         conversations: [conversation, ...state.conversations],
+        error: null, // Clear any previous errors
       );
 
       LoggerService.info('Conversation created: ${conversation.id}');
       return conversation;
     } catch (e) {
-      LoggerService.error('Failed to create conversation', e);
-      state = state.copyWith(error: e.toString());
+      // Handle permission errors gracefully without extensive logging
+      String errorMessage = 'Failed to create conversation';
+
+      if (e.toString().contains('403') ||
+          e.toString().toLowerCase().contains('insufficient permissions')) {
+        errorMessage = 'Insufficient permissions to create this conversation';
+        LoggerService.info(
+          'Permission denied for conversation creation - this is handled gracefully',
+        );
+      } else {
+        LoggerService.error('Failed to create conversation', e);
+      }
+
+      state = state.copyWith(error: errorMessage);
       return null;
     }
   }
